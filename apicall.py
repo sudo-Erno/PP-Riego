@@ -6,6 +6,28 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+def decide_to_water(days_info, window_size=8, rain_prob=75):
+    
+    window_size = window_size if window_size < 48 else 48
+    i = 0
+    weather = []
+    
+    for info in days_info:
+        if i == window_size:
+            break
+        else:
+            weather.append(info[6])
+            i += 1
+    
+    # Probability of rain
+    rain = weather.count("Rain") / len(weather)
+    rain *= 100
+    
+    if rain > rain_prob:
+        return True
+    
+    return False
+
 def handle_time(time):
     
     gtm_time = datetime.utcfromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S')
@@ -58,3 +80,5 @@ df = pd.DataFrame(data, columns=["temperature", "pressure", "humidity", "uvi", "
 plt.plot(df["temperature"])
 plt.ylabel("Temperature")
 plt.show()
+
+decide_to_water(two_days_info.values(), 30, 50)
